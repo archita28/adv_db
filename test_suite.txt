@@ -1,0 +1,248 @@
+// ============================================================================
+// REPCREC TEST SUITE
+// Comprehensive test cases covering all major scenarios
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// TEST 1: First-Committer-Wins (Write-Write Conflict)
+// Expected: T2 commits, T1 aborts
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+W(T1, x1, 101)
+W(T2, x2, 202)
+W(T1, x2, 102)
+W(T2, x1, 201)
+end(T2)
+end(T1)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 2: Snapshot Isolation (No Conflicts)
+// Expected: Both commit, T2 reads initial values (10 for x1, 20 for x2)
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+W(T1, x1, 101)
+R(T2, x2)
+W(T1, x2, 102)
+R(T2, x1)
+end(T1)
+end(T2)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 3: Site Failure (Non-Critical)
+// Expected: All commit, x8=88 everywhere except site 2 initially
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+R(T1, x3)
+fail(2)
+W(T2, x8, 88)
+R(T2, x3)
+W(T1, x5, 91)
+end(T2)
+recover(2)
+end(T1)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 4: Critical Site Failure (Write-Site Fails)
+// Expected: T1 aborts (wrote to site 2 which failed), T2 commits
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+W(T1, x1, 512)
+fail(2)
+W(T2, x8, 88)
+R(T2, x3)
+R(T1, x5)
+end(T2)
+recover(2)
+end(T1)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 5: Multiversion Read Consistency
+// Expected: T2 reads x3=30 (initial), T3 reads x3=33 (from T1)
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+R(T2, x1)
+R(T2, x2)
+W(T1, x3, 33)
+end(T1)
+begin(T3)
+R(T3, x3)
+R(T2, x3)
+end(T2)
+end(T3)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 6: Read-Write Cycle (Simple)
+// Expected: T1 commits, T2 aborts (RW cycle)
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+R(T1, x2)
+R(T2, x4)
+W(T1, x4, 30)
+W(T2, x2, 90)
+end(T1)
+end(T2)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 7: Only T3 Commits (Multiple Writers)
+// Expected: T3 commits, T2 and T1 abort (First-committer-wins)
+// Final: x2=10
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+begin(T3)
+W(T3, x2, 10)
+W(T2, x2, 20)
+W(T1, x2, 30)
+end(T3)
+end(T2)
+end(T1)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 8: Replicated Variable Recovery
+// Expected: T1 and T2 commit, sites 3-4 recover but can't serve x8 
+// until next write
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+fail(3)
+fail(4)
+R(T1, x1)
+W(T2, x8, 88)
+end(T1)
+recover(4)
+recover(3)
+R(T2, x3)
+end(T2)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 9: Complex RW Cycle (5 Transactions)
+// Expected: T1-T4 commit, T5 aborts (closes RW cycle)
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+begin(T3)
+begin(T4)
+begin(T5)
+R(T4, x4)
+R(T5, x5)
+R(T1, x1)
+W(T1, x2, 10)
+R(T2, x2)
+W(T2, x3, 20)
+R(T3, x3)
+W(T3, x4, 30)
+W(T4, x5, 40)
+W(T5, x1, 50)
+end(T4)
+end(T3)
+end(T2)
+end(T1)
+end(T5)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 10: Read-Your-Own-Write
+// Expected: T1 reads its own write, not committed value
+// ----------------------------------------------------------------------------
+begin(T1)
+W(T1, x5, 99)
+R(T1, x5)
+end(T1)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 11: All Sites Fail and Recover
+// Expected: T3 should abort - no site has continuous uptime for x8
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+fail(3)
+fail(4)
+R(T1, x1)
+W(T2, x8, 88)
+end(T1)
+recover(4)
+recover(3)
+R(T2, x3)
+end(T2)
+fail(1)
+fail(2)
+fail(5)
+fail(6)
+fail(7)
+fail(8)
+fail(9)
+fail(10)
+begin(T3)
+// T3 should abort - no valid snapshot site
+
+// ----------------------------------------------------------------------------
+// TEST 12: Waiting for Site Recovery
+// Expected: T3 waits for site 2, then successfully reads
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+fail(3)
+fail(4)
+R(T1, x1)
+W(T2, x8, 88)
+end(T1)
+recover(4)
+recover(3)
+R(T2, x3)
+end(T2)
+fail(1)
+fail(5)
+fail(6)
+fail(7)
+fail(8)
+fail(9)
+fail(10)
+begin(T3)
+fail(2)
+begin(T4)
+W(T4, x8, 99)
+end(T4)
+// T3 waiting for site 2
+recover(2)
+// T3 should now be able to read
+end(T3)
+dump()
+
+// ----------------------------------------------------------------------------
+// TEST 13: WW Edge Closes RW Cycle
+// Expected: T3 aborts (WW edge to T1 closes RW cycle via T2)
+// T1 writes x2,x4 -> T2 reads x4 (RW edge) -> T2 writes x6 -> 
+// T3 reads x6 (RW edge) -> T3 writes x2 (WW edge back to T1, closing cycle)
+// ----------------------------------------------------------------------------
+begin(T1)
+begin(T2)
+W(T1, x2, 80)
+W(T1, x4, 50)
+R(T2, x4)
+end(T1)
+W(T2, x6, 90)
+begin(T3)
+R(T3, x6)
+W(T3, x2, 70)
+end(T2)
+end(T3)
+dump()
+
+// ============================================================================
+// END OF TEST SUITE
+// ============================================================================

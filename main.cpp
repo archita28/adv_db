@@ -1,6 +1,29 @@
-#include <iostream> // Include the iostream library for input/output operations
+// main.cpp
+// Author: RepCRec Team
+// Date: December 2024
+// Purpose: Main entry point for RepCRec distributed database system
+// Usage: ./repcrec < input.txt
 
-int main() { // The main function, where program execution begins
-    std::cout << "Hello, World!" << std::endl; // Print "Hello, World!" to the console
-    return 0; // Indicate successful program execution
+#include "TransactionManager.h"
+#include "Parser.h"
+#include <iostream>
+#include <memory>
+
+int main() {
+    std::cout << "RepCRec - Distributed Database with SSI and Available Copies" << std::endl;
+    std::cout << "=============================================================" << std::endl << std::endl;
+    
+    // Create transaction manager
+    auto tm = std::make_shared<RepCRec::TransactionManager>();
+    
+    // Create parser
+    RepCRec::Parser parser(tm);
+    
+    // Run the parser on stdin
+    parser.run();
+    
+    std::cout << "\n=============================================================" << std::endl;
+    std::cout << "RepCRec execution complete" << std::endl;
+    
+    return 0;
 }
