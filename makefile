@@ -7,22 +7,11 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -O2
 TARGET = repcrec
 
 # Source files
-SOURCES = main.cpp \
-          DataManager.cpp \
-          TransactionManager.cpp \ 
-          Parser.cpp
+SOURCES = main.cpp DataManager.cpp TransactionManager.cpp Parser.cpp
 
 # Header files (for dependency tracking)
-HEADERS = Constants.h \
-          Version.h \
-          WaitInfo.h \
-          ReadInfo.h \
-          WriteInfo.h \
-          Transaction.h \
-          SiteState.h \
-          DataManager.h \
-          TransactionManager.h \
-          Parser.h
+HEADERS = Constants.h Version.h WaitInfo.h ReadInfo.h WriteInfo.h \
+          Transaction.h SiteState.h DataManager.h TransactionManager.h Parser.h
 
 # Object files
 OBJECTS = $(SOURCES:.cpp=.o)
@@ -46,7 +35,7 @@ clean:
 
 # Run with a test file
 test: $(TARGET)
-	@echo "Running test..."
+	@echo "Running test1.txt..."
 	./$(TARGET) < test1.txt
 
 # Phony targets
