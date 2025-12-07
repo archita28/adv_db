@@ -138,16 +138,12 @@ void TransactionManager::readReplicated(std::shared_ptr<Transaction> txn, int va
         return;
     }
     
-    txn->addRead(variableId, chosenSite, version->value,
-                 version->commitTimestamp, version->writerTransactionId);
+    txn->addRead(variableId, chosenSite, version->value, version->commitTimestamp, version->writerTransactionId);
     
     // Track first access time for this site
     if (txn->firstAccessTimePerSite.find(chosenSite) == txn->firstAccessTimePerSite.end()) {
         txn->firstAccessTimePerSite[chosenSite] = currentTimestamp;
     }
-    
-    // NOTE: RW edges are NOT created here anymore.
-    // They are created at commit time in createRWEdgesForCommit()
     
     std::cout << "x" << variableId << ": " << version->value << std::endl;
 }
@@ -184,7 +180,8 @@ void TransactionManager::write(const std::string& transactionId, int variableId,
     }
     
     std::cout << "W(" << transactionId << ", x" << variableId << ", " << value << ") -> sites:";
-    for (int s : sitesWritten) std::cout << " " << s;
+    for (int s : sitesWritten) 
+        std::cout << " " << s;
     std::cout << std::endl;
 }
 
@@ -215,7 +212,8 @@ std::set<int> TransactionManager::computeValidSnapshotSites(
             }
         }
         
-        if (!version) continue;
+        if (!version) 
+            continue;
         
         int commitTime = version->commitTimestamp;
         
@@ -286,7 +284,6 @@ bool TransactionManager::violatesReadWriteCycle(std::shared_ptr<Transaction> txn
 
     createRWEdgesForCommit(txn);
     
-
     std::set<std::string> visited;
     if (hasRWCyclePath(txn->id, txn->id, 0, visited)) {
         return true;
@@ -316,8 +313,10 @@ void TransactionManager::createRWEdgesForCommit(std::shared_ptr<Transaction> com
         
         // Check active transactions
         for (auto& [txnId, txn] : transactions) {
-            if (txnId == committingTxn->id) continue;
-            if (txn->startTime >= currentTimestamp) continue;  
+            if (txnId == committingTxn->id) 
+                continue;
+            if (txn->startTime >= currentTimestamp) 
+                continue;  
             
             auto readIt = txn->readSet.find(variableId);
             if (readIt != txn->readSet.end()) {
@@ -328,9 +327,11 @@ void TransactionManager::createRWEdgesForCommit(std::shared_ptr<Transaction> com
         
         // Check already committed transactions
         for (auto& txn : committedTransactions) {
-            if (txn->id == committingTxn->id) continue;
+            if (txn->id == committingTxn->id) 
+                continue;
 
-            if (txn->startTime >= currentTimestamp) continue;
+            if (txn->startTime >= currentTimestamp) 
+                continue;
             
             auto readIt = txn->readSet.find(variableId);
             if (readIt != txn->readSet.end()) {
@@ -389,7 +390,8 @@ bool TransactionManager::hasPathViaRW(const std::string& fromTxnId, const std::s
         std::string current = q.front();
         q.pop();
         
-        if (current == toTxnId) return true;
+        if (current == toTxnId) 
+            return true;
         
         auto it = transactions.find(current);
         if (it == transactions.end()) {

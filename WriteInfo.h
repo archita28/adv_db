@@ -14,7 +14,7 @@ namespace RepCRec {
 class WriteInfo {
 public:
     int value;
-    std::set<int> sitesApplied;  // Sites where this write was buffered
+    std::set<int> sitesApplied;  
     
     WriteInfo(int val) : value(val) {}
     
@@ -23,6 +23,6 @@ public:
     }
 };
 
-} // namespace RepCRec
+} 
 
-#endif // WRITEINFO_H
+#endif 

@@ -13,7 +13,7 @@ namespace RepCRec {
 
 struct FailureInterval {
     int failTime;
-    int recoverTime;  // -1 if still down
+    int recoverTime;  
     
     FailureInterval(int fTime) : failTime(fTime), recoverTime(-1) {}
 };
@@ -27,7 +27,6 @@ public:
     
     SiteState(int id) : siteId(id), isUp(true), lastRecoveryTime(0) {}
     
-    // Default constructor needed for map
     SiteState() : siteId(0), isUp(true), lastRecoveryTime(0) {}
     
     // Record a failure
@@ -47,12 +46,9 @@ public:
         }
     }
     
-    // Check if site was up continuously during a time interval
     bool wasUpContinuously(int fromTime, int toTime) const {
         for (const auto& interval : failureHistory) {
-            // Check if this failure overlaps with [fromTime, toTime]
-            if (interval.failTime <= toTime && 
-                (interval.recoverTime == -1 || interval.recoverTime > fromTime)) {
+            if (interval.failTime <= toTime && (interval.recoverTime == -1 || interval.recoverTime > fromTime)) {
                 return false;  // Site was down during the critical period
             }
         }
@@ -60,6 +56,6 @@ public:
     }
 };
 
-} // namespace RepCRec
+} 
 
-#endif // SITESTATE_H
+#endif 

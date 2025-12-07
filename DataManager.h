@@ -257,6 +257,6 @@ public:
     }
 };
 
-} // namespace RepCRec
+} 
 
-#endif // DATAMANAGER_H
+#endif 

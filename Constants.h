@@ -31,6 +31,6 @@ int getHomeSite(int varId);
 std::set<int> getVariableSites(int varId);
 std::string statusToString(TransactionStatus status);
 
-} // namespace RepCRec
+} 
 
-#endif // CONSTANTS_H
+#endif 

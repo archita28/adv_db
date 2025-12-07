@@ -24,6 +24,6 @@ public:
     Version(int val) : value(val), commitTimestamp(0), writerTransactionId("INITIAL") {}
 };
 
-} // namespace RepCRec
+} 
 
-#endif // VERSION_H
+#endif 

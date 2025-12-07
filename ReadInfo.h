@@ -23,6 +23,6 @@ public:
           writerTransactionId(writerId) {}
 };
 
-} // namespace RepCRec
+} 
 
-#endif // READINFO_H
+#endif 

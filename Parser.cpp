@@ -15,7 +15,8 @@ Parser::Parser(std::shared_ptr<TransactionManager> manager) : tm(manager) {}
 
 std::string Parser::trim(const std::string& str) {
     size_t first = str.find_first_not_of(" \t\n\r");
-    if (first == std::string::npos) return "";
+    if (first == std::string::npos) 
+        return "";
     size_t last = str.find_last_not_of(" \t\n\r");
     return str.substr(first, (last - first + 1));
 }
@@ -56,7 +57,6 @@ void Parser::parseCommand(const std::string& line) {
     
     std::vector<std::string> args = split(argsStr, ',');
     
-    // Execute commands
     if (command == "begin") {
         if (args.size() != 1) {
             std::cout << "Error: begin requires 1 argument" << std::endl;
@@ -139,4 +139,4 @@ void Parser::run() {
     }
 }
 
-} // namespace RepCRec
+} 

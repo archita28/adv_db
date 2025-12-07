@@ -19,20 +19,17 @@ class Parser {
 private:
     std::shared_ptr<TransactionManager> tm;
     
-    // Helper methods
     std::string trim(const std::string& str);
     std::vector<std::string> split(const std::string& str, char delimiter);
     
 public:
     Parser(std::shared_ptr<TransactionManager> manager);
     
-    // Parse and execute a single command
     void parseCommand(const std::string& line);
     
-    // Run the parser on input stream
     void run();
 };
 
-} // namespace RepCRec
+} 
 
-#endif // PARSER_H
+#endif 

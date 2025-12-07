@@ -455,6 +455,6 @@ private:
     void printTransactionOutput(const std::string& transactionId, bool committed, const std::string& reason = "");
 };
 
-} // namespace RepCRec
+} 
 
-#endif // TRANSACTIONMANAGER_H
+#endif 

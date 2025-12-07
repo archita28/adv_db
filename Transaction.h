@@ -25,17 +25,17 @@ public:
     TransactionStatus status;
     
     // Read and write tracking
-    std::map<int, ReadInfo> readSet;        // variableId -> ReadInfo
-    std::map<int, WriteInfo> writeSet;      // variableId -> WriteInfo
+    std::map<int, ReadInfo> readSet;        
+    std::map<int, WriteInfo> writeSet;      
     
     // Site access tracking for failure detection
-    std::set<int> writeSites;                    // Sites we've written to
-    std::map<int, int> firstAccessTimePerSite;   // siteId -> first access time
-    std::set<int> criticalReadSites;             // Sites we read unreplicated vars from
+    std::set<int> writeSites;                    
+    std::map<int, int> firstAccessTimePerSite;   
+    std::set<int> criticalReadSites;             
     
     // Conflict tracking for RW-cycle detection
-    std::set<std::string> incomingReadWriteConflicts;  // Txns that wrote what we read
-    std::set<std::string> outgoingReadWriteConflicts;  // Txns that read what we wrote
+    std::set<std::string> incomingReadWriteConflicts;  
+    std::set<std::string> outgoingReadWriteConflicts;  
     
     // Wait information
     WaitInfo waitInfo;
@@ -49,8 +49,7 @@ public:
     }
     
     // Add a read operation
-    void addRead(int variableId, int siteId, int value, int versionTime, 
-                 const std::string& writerId) {
+    void addRead(int variableId, int siteId, int value, int versionTime, const std::string& writerId) {
         readSet.emplace(variableId, ReadInfo(siteId, value, versionTime, writerId));
     }
     
@@ -59,7 +58,7 @@ public:
         if (writeSet.find(variableId) == writeSet.end()) {
             writeSet.emplace(variableId, WriteInfo(value));
         } else {
-            writeSet.at(variableId).value = value;  // Update value
+            writeSet.at(variableId).value = value; 
         }
     }
     
@@ -85,6 +84,6 @@ public:
     }
 };
 
-} // namespace RepCRec
+} 
 
-#endif // TRANSACTION_H
+#endif 

@@ -14,7 +14,7 @@ namespace RepCRec {
 class WaitInfo {
 public:
     int variableId;
-    std::set<int> candidateSites;  // Sites that might become readable
+    std::set<int> candidateSites;  
     
     WaitInfo() : variableId(-1) {}
     
@@ -31,6 +31,6 @@ public:
     }
 };
 
-} // namespace RepCRec
+} 
 
-#endif // WAITINFO_H
+#endif 

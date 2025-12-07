@@ -9,7 +9,7 @@ TARGET = repcrec
 # Source files
 SOURCES = main.cpp DataManager.cpp TransactionManager.cpp Parser.cpp Constants.cpp
 
-# Header files (for dependency tracking)
+# Header files 
 HEADERS = Constants.h Version.h WaitInfo.h ReadInfo.h WriteInfo.h \
           Transaction.h SiteState.h DataManager.h TransactionManager.h Parser.h
 
@@ -35,8 +35,14 @@ clean:
 
 # Run with a test file
 test: $(TARGET)
-	@echo "Running test1.txt..."
-	./$(TARGET) < test1.txt
+	@echo "Running all tests in 'tests/' directory..."
+	@for test_file in $$(ls tests/test*.txt | sort -V); do \
+		echo "--------------------------------------------------"; \
+		echo "Running $$test_file..."; \
+		./$(TARGET) < $$test_file; \
+	done
+	@echo "--------------------------------------------------"
+	@echo "All tests completed."
 
 # Phony targets
 .PHONY: all clean test
