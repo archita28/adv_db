@@ -11,10 +11,6 @@
 
 namespace RepCRec {
 
-// ============================================================================
-// CONSTRUCTOR & BASIC OPERATIONS
-// ============================================================================
-
 TransactionManager::TransactionManager() : currentTimestamp(0) {
     for (int i = 1; i <= NUM_SITES; i++) {
         dataManagers[i] = std::make_shared<DataManager>(i);
@@ -30,9 +26,7 @@ void TransactionManager::begin(const std::string& transactionId) {
               << currentTimestamp << std::endl;
 }
 
-// ============================================================================
 // READ OPERATIONS
-// ============================================================================
 
 void TransactionManager::read(const std::string& transactionId, int variableId) {
     currentTimestamp++;
@@ -158,9 +152,7 @@ void TransactionManager::readReplicated(std::shared_ptr<Transaction> txn, int va
     std::cout << "x" << variableId << ": " << version->value << std::endl;
 }
 
-// ============================================================================
 // WRITE OPERATIONS
-// ============================================================================
 
 void TransactionManager::write(const std::string& transactionId, int variableId, int value) {
     currentTimestamp++;
@@ -196,9 +188,7 @@ void TransactionManager::write(const std::string& transactionId, int variableId,
     std::cout << std::endl;
 }
 
-// ============================================================================
 // VALIDATION METHODS
-// ============================================================================
 
 std::set<int> TransactionManager::computeValidSnapshotSites(
     std::shared_ptr<Transaction> txn, int variableId) {
@@ -355,13 +345,12 @@ void TransactionManager::createRWEdgesForCommit(std::shared_ptr<Transaction> com
     }
 }
 
-bool TransactionManager::hasRWCyclePath(const std::string& fromTxnId, 
-                                       const std::string& targetTxnId,
-                                       int edgeCount, 
-                                       std::set<std::string>& visited) {
+bool TransactionManager::hasRWCyclePath(const std::string& fromTxnId, const std::string& targetTxnId, int edgeCount, std::set<std::string>& visited) {
     
-    if (fromTxnId == targetTxnId && edgeCount >= 2) return true;
-    if (visited.find(fromTxnId) != visited.end()) return false;
+    if (fromTxnId == targetTxnId && edgeCount >= 2) 
+        return true;
+    if (visited.find(fromTxnId) != visited.end()) 
+        return false;
     visited.insert(fromTxnId);
     
     auto it = transactions.find(fromTxnId);
@@ -389,8 +378,7 @@ bool TransactionManager::hasRWCyclePath(const std::string& fromTxnId,
     return false;
 }
 
-bool TransactionManager::hasPathViaRW(const std::string& fromTxnId, 
-                                     const std::string& toTxnId) {
+bool TransactionManager::hasPathViaRW(const std::string& fromTxnId, const std::string& toTxnId) {
     std::queue<std::string> q;
     std::set<std::string> visited;
     
@@ -429,9 +417,8 @@ bool TransactionManager::hasPathViaRW(const std::string& fromTxnId,
     return false;
 }
 
-// ============================================================================
+
 // COMMIT/ABORT
-// ============================================================================
 
 void TransactionManager::end(const std::string& transactionId) {
     currentTimestamp++;
@@ -494,9 +481,7 @@ void TransactionManager::abort(std::shared_ptr<Transaction> txn, const std::stri
     std::cout << txn->id << " aborts (" << reason << ")" << std::endl;
 }
 
-// ============================================================================
 // SITE MANAGEMENT
-// ============================================================================
 
 void TransactionManager::fail(int siteId) {
     currentTimestamp++;
