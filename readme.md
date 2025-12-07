@@ -90,11 +90,6 @@ When a site recovers:
 ./run_tests.sh                    # all tests
 ```
 
-Notable tests:
-- **test18.txt**: 5-transaction RW cycle (T5 aborts)
-- **test22.txt**: WW conflict closes RW cycle
-- **test25.txt**: transaction waits for recovery
-
 See `test_suite.txt` for all tests with descriptions.
 
 ---
@@ -150,7 +145,6 @@ repcrec/
 ├── Makefile
 ├── tests/           # 25 test files (test1.txt - test25.txt)
 ├── test_suite.txt   # all tests with comments
-├── split_tests.py   # script to generate test files
 ├── run_tests.sh     # test runner
 └── README.md
 ```
@@ -162,7 +156,7 @@ repcrec/
 ```bash
 make              # compile
 make clean        # remove artifacts
-make test         # run test1
+make test         # run test
 ```
 
 **Prerequisites:** C++17 compiler (g++ or clang++)
@@ -189,14 +183,4 @@ reprozip trace ./repcrec < tests/test1.txt
 reprozip pack repcrec.rpz
 ```
 
-The package includes the executable, dependencies, and test data.
-
----
-
-## Design Choices
-
-- Single TM simplifies coordination (spec allows this)
-- In-memory only (no disk persistence)
-- Integer timestamps (simpler than vector clocks)
-- BFS for cycle detection
 
