@@ -244,6 +244,9 @@ bool TransactionManager::violatesFailureRule(std::shared_ptr<Transaction> txn) {
         }
     }
     
+    // NOTE: The project spec states "you need not do that for reads”.
+    // But we implemented an additional safety check for odd-indexed variable reads
+    // if a transaction reads an odd-indexed  variable from a site that subsequently fails, the transaction will abort
     for (int siteId : txn->criticalReadSites) {
         auto accessIt = txn->firstAccessTimePerSite.find(siteId);
         if (accessIt == txn->firstAccessTimePerSite.end()) {

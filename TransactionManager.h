@@ -433,26 +433,7 @@ private:
      *   - May print: "Retry: T1"
      *   - May complete reads and update transaction state
      */
-    void retryWaitingTransactions(int recoveredSiteId);
-    
-    // ========================================================================
-    // OUTPUT HELPERS
-    // ========================================================================
-    
-    /**
-     * printTransactionOutput - Format transaction outcome messages
-     * Author: Archita Arora
-     * Input:
-     *   - transactionId (string): Transaction ID
-     *   - committed (bool): Whether transaction committed or aborted
-     *   - reason (string): Reason if aborted (optional, default="")
-     * Output: Prints to stdout
-     * Description: Helper function to format and print transaction outcome messages.
-     * Side Effects: Prints commit or abort message with optional reason
-     * Note: This method is declared but appears to be unused in the current 
-     *       implementation. The commit() and abort() methods handle printing directly.
-     */
-    void printTransactionOutput(const std::string& transactionId, bool committed, const std::string& reason = "");
+    void retryWaitingTransactions(int recoveredSiteId);  
 };
 
 } 
