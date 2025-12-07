@@ -175,6 +175,12 @@ reprounzip directory setup repcrec.rpz repcrec-run
 reprounzip directory run repcrec-run
 ```
 
+Inside the unpacked environment, use:
+```bash
+./repcrec < tests/test1.txt
+./run_tests.sh
+```
+
 **To create the package:**
 
 ```bash
