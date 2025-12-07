@@ -358,8 +358,7 @@ private:
      *   - Modifies visited set during traversal
      *   - Traverses both active transactions and committedTransactions
      */
-    bool hasRWCyclePath(const std::string& fromTxnId, const std::string& targetTxnId, 
-                        int edgeCount, std::set<std::string>& visited);
+    bool hasRWCyclePath(const std::string& fromTxnId, const std::string& targetTxnId, int edgeCount, std::set<std::string>& visited);
     
     /**
      * hasPathViaRW - BFS-based path finding
@@ -453,8 +452,7 @@ private:
      * Note: This method is declared but appears to be unused in the current 
      *       implementation. The commit() and abort() methods handle printing directly.
      */
-    void printTransactionOutput(const std::string& transactionId, bool committed, 
-                               const std::string& reason = "");
+    void printTransactionOutput(const std::string& transactionId, bool committed, const std::string& reason = "");
 };
 
 } // namespace RepCRec

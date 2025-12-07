@@ -224,7 +224,9 @@ public:
      * Description: Returns the current operational status of the site.
      * Side Effects: None (read-only inline getter)
      */
-    bool getIsUp() const { return isUp; }
+    bool getIsUp() const { 
+        return isUp; 
+    }
     
     /**
      * getSiteId - Get site identifier
@@ -234,7 +236,9 @@ public:
      * Description: Returns the site identifier for this DataManager.
      * Side Effects: None (read-only inline getter)
      */
-    int getSiteId() const { return siteId; }
+    int getSiteId() const { 
+        return siteId; 
+    }
     
     /**
      * getDataStore - Get direct access to version history
@@ -248,7 +252,9 @@ public:
      * Side Effects: None (returns reference, but used read-only by caller)
      * Note: This is a convenience method to avoid copying large version histories
      */
-    std::map<int, std::vector<Version>>& getDataStore() { return dataStore; }
+    std::map<int, std::vector<Version>>& getDataStore() { 
+        return dataStore; 
+    }
 };
 
 } // namespace RepCRec

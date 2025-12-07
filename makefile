@@ -1,6 +1,6 @@
 # Makefile for RepCRec Distributed Database
-# Author: RepCRec Team
-# Date: December 2024
+# Author: Aishwarya and Archita
+# Date: December 2025
 
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2
